@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Basic document metadata -->
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Vertical Video Feed</title>
+    <!-- Styles are split by concerns: base, feed layout, player UI -->
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/feed.css" />
+    <link rel="stylesheet" href="./styles/player.css" />
+  </head>
+  <body>
+    <!-- Main app shell -->
+    <main class="app" id="app">
+      <!-- Feed container is rendered dynamically from JavaScript -->
+      <div class="feed" id="feed" aria-label="Short videos feed"></div>
+      <!-- Fallback state shown when no videos are returned -->
+      <div
+        class="empty-state hidden"
+        id="emptyState"
+        role="status"
+        aria-live="polite"
+      >
+        No videos available.
+      </div>
+    </main>
+    <!-- Application bootstrap -->
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

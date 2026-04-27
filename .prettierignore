@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Secrets
+credentials.json
+
+# Build / generated outputs
+*.network-request
+*.network-response
+*.heapsnapshot
+
+# Screenshots / binary
+*.png
+*.jpg
+*.jpeg
+*.webp
