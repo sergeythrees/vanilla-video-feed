@@ -72,7 +72,7 @@ export class VirtualFeed {
     const wrapper = document.createElement('div')
     wrapper.innerHTML = `
       <section class="feed-item" data-index="${index}">
-        <video class="feed-video" src="${videoData.src}" muted loop playsinline
+        <video class="feed-video" data-src="${videoData.src}" muted loop playsinline
                webkit-playsinline preload="none"
                aria-label="${videoData.title}. Video ${index + 1} of ${this._total}"
                ${videoData.poster ? `poster="${videoData.poster}"` : ''}>
