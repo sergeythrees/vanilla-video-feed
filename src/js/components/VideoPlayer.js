@@ -107,15 +107,37 @@ export class VideoPlayer {
     this._syncButtons()
   }
 
+  resetProgress() {
+    this._progressEl.style.width = '0'
+  }
+
+  _loadSrc() {
+    const dataSrc = this._videoEl.dataset.src
+    if (dataSrc && !this._videoEl.hasAttribute('src')) {
+      this._videoEl.setAttribute('src', dataSrc)
+    }
+  }
+
+  _unloadSrc() {
+    if (!this._videoEl.hasAttribute('src')) return
+
+    this._videoEl.pause()
+    this._videoEl.removeAttribute('src')
+    this.resetProgress()
+    this._syncButtons()
+  }
+
   /**
    * @param {number} distance - distance from the active feed item
    */
   setDistance(distance) {
     preloadForDistance(this._videoEl, distance)
-  }
 
-  resetProgress() {
-    this._progressEl.style.width = '0'
+    if (distance <= 2) {
+      this._loadSrc()
+    } else {
+      this._unloadSrc()
+    }
   }
 
   /**
