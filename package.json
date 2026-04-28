@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "start": "node server.mjs",
     "stylelint": "stylelint \"src/styles/**/*.css\"",
     "stylelint:fix": "stylelint \"src/styles/**/*.css\" --fix",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@playwright/test": "^1.59.1",
     "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^9.22.0",
     "globals": "^16.0.0",
