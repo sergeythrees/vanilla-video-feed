@@ -22,3 +22,6 @@ Thumbs.db
 *.network-request
 *.network-response
 *.heapsnapshot
+
+# Test coverage output
+coverage/
