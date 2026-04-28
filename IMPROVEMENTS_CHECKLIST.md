@@ -16,4 +16,4 @@
 
 - [ ] **CSS `content-visibility: auto`** на `.feed-item` с `contain-intrinsic-size: 100vh` — браузер пропускает рендеринг невидимых карточек.
 
-- [ ] **Поправить пропорции на широких экранах** — добавить на `.feed-video` `aspect-ratio: 9/16`, ограничить `.feed-item` по ширине (`max-width: 480px; margin-inline: auto`).
+- [x] **Поправить пропорции на широких экранах** — добавить на `.feed-video` `aspect-ratio: 9/16`, ограничить `.feed-item` по ширине (`max-width: 480px; margin-inline: auto`).
