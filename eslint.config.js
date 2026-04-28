@@ -3,7 +3,6 @@ import globals from 'globals'
 
 export default [
   js.configs.recommended,
-
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -11,7 +10,6 @@ export default [
     },
     rules: {
       eqeqeq: ['error', 'always', { null: 'never' }],
-
       'no-unused-vars': [
         'warn',
         {
@@ -20,21 +18,15 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-
       'no-console': 'warn',
-
       'consistent-return': 'error',
-
       'prefer-const': 'error',
-
       semi: ['error', 'never'],
-
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1, maxBOF: 0 }],
       radix: 'error',
-
       'no-shadow': 'warn',
     },
   },
-
   {
     files: ['src/js/**/*.js'],
     languageOptions: {
@@ -43,7 +35,6 @@ export default [
       },
     },
   },
-
   {
     files: ['server.mjs', 'eslint.config.js', '**/playwright.config.js'],
     languageOptions: {
