@@ -3,9 +3,9 @@ export class FeedObserver {
    * @param {HTMLElement[]} items - array of feed item elements to observe
    * @param {(index: number) => void} onActiveChange - callback invoked when active item changes
    */
-  constructor(items, onActiveChange) {
+  constructor(items, onActiveChange, initialIndex = -1) {
     /** @type {number} */
-    this._activeIndex = -1;
+    this._activeIndex = initialIndex;
     /** @type {(index: number) => void} */
     this._onActiveChange = onActiveChange;
 

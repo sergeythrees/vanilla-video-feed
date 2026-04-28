@@ -1,5 +1,5 @@
 import { loadVideosFromDrive } from './data/videos.js';
-import { renderFeed } from './components/feedRenderer.js';
+import { VirtualFeed } from './components/virtualFeed.js';
 import { VideoPlayer } from './components/VideoPlayer.js';
 import { FeedObserver } from './components/feedObserver.js';
 import { InputController } from './controls/input.js';
@@ -14,14 +14,22 @@ class App {
     this._feedEl = feedEl;
     /** @type {HTMLElement} */
     this._emptyStateEl = emptyStateEl;
-    /** @type {VideoPlayer[]} */
-    this._players = [];
+
+    /** @type {VirtualFeed | null} */
+    this._virtualFeed = null;
+
+    /** @type {Map<number, VideoPlayer>} */
+    this._players = new Map();
+
     /** @type {HTMLElement[]} */
     this._itemEls = [];
+
     /** @type {number} */
     this._activeIndex = 0;
+
     /** @type {FeedObserver | null} */
     this._observerController = null;
+
     /** @type {InputController | null} */
     this._eventsController = null;
   }
@@ -43,20 +51,26 @@ class App {
       return;
     }
 
-    renderFeed(this._feedEl, videos);
+    this._virtualFeed = new VirtualFeed(this._feedEl, videos);
 
-    this._itemEls = Array.from(this._feedEl.querySelectorAll('.feed-item'));
-    this._players = this._itemEls.map((itemEl) => new VideoPlayer(itemEl));
+    this._itemEls = this._virtualFeed.getItemElements();
+    for (const itemEl of this._itemEls) {
+      const index = Number(itemEl.dataset.index);
+      this._players.set(index, new VideoPlayer(itemEl));
+    }
+
     this._activeIndex = 0;
 
-    this._observerController = new FeedObserver(this._itemEls, (nextIndex) =>
-      this._applyPlaybackState(nextIndex),
+    this._observerController = new FeedObserver(
+      this._itemEls,
+      (nextIndex) => this._applyPlaybackState(nextIndex),
+      0,
     );
 
     this._eventsController = new InputController(
       this._feedEl,
       (direction) => this._navigate(direction),
-      () => this._players[this._activeIndex]?.pause(),
+      () => this._players.get(this._activeIndex)?.pause(),
     );
 
     this._applyPlaybackState(0);
@@ -64,6 +78,7 @@ class App {
     window.addEventListener('beforeunload', () => {
       this._observerController?.disconnect();
       this._eventsController?.cleanup();
+      this._virtualFeed?.destroy();
     });
   }
 
@@ -72,10 +87,35 @@ class App {
    */
   _applyPlaybackState(nextIndex) {
     this._activeIndex = nextIndex;
-    for (let i = 0; i < this._players.length; i++) {
-      const player = this._players[i];
-      player.setDistance(Math.abs(i - nextIndex));
-      if (i === nextIndex) {
+
+    const { added, removed } = this._virtualFeed.update(nextIndex);
+
+    for (const index of removed) {
+      this._players.delete(index);
+    }
+
+    const currentItemEls = this._virtualFeed.getItemElements();
+    for (const index of added) {
+      const itemEl = currentItemEls.find(
+        (el) => Number(el.dataset.index) === index,
+      );
+      if (itemEl) {
+        this._players.set(index, new VideoPlayer(itemEl));
+      }
+    }
+
+    this._itemEls = currentItemEls;
+
+    this._observerController?.disconnect();
+    this._observerController = new FeedObserver(
+      this._itemEls,
+      (nextIdx) => this._applyPlaybackState(nextIdx),
+      nextIndex,
+    );
+
+    for (const [index, player] of this._players) {
+      player.setDistance(Math.abs(index - nextIndex));
+      if (index === nextIndex) {
         player.play();
       } else {
         player.pause();
@@ -87,17 +127,33 @@ class App {
    * @param {number} direction - scroll direction (1 for forward, -1 for backward)
    */
   _navigate(direction) {
+    const total = this._virtualFeed
+      ? this._virtualFeed.total
+      : this._itemEls.length;
+
     const nextIndex = Math.max(
       0,
-      Math.min(this._itemEls.length - 1, this._activeIndex + direction),
+      Math.min(total - 1, this._activeIndex + direction),
     );
+
     if (nextIndex === this._activeIndex) {
       return;
     }
-    this._itemEls[nextIndex].scrollIntoView({
-      block: 'start',
-      behavior: 'smooth',
-    });
+
+    // The target element may not be in the DOM yet if the user jumped
+    // more than the buffer size (e.g. PageUp / PageDown).
+    // Update the virtual feed first to ensure it exists.
+    this._applyPlaybackState(nextIndex);
+
+    const targetEl = this._feedEl.querySelector(
+      `.feed-item[data-index="${nextIndex}"]`,
+    );
+    if (targetEl) {
+      targetEl.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    }
   }
 }
 

@@ -11,6 +11,10 @@
   touch-action: pan-y;
 }
 
+.feed-spacer {
+  pointer-events: none;
+}
+
 .feed-item {
   position: relative;
   height: 100vh;
