@@ -1,5 +1,5 @@
-import js from '@eslint/js';
-import globals from 'globals';
+import js from '@eslint/js'
+import globals from 'globals'
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
@@ -34,6 +34,9 @@ export default [
       // Prefer const over let when variable is never reassigned
       'prefer-const': 'error',
 
+      // No semicolons
+      semi: ['error', 'never'],
+
       // Require radix parameter in parseInt
       radix: 'error',
 
@@ -64,4 +67,4 @@ export default [
       'no-console': 'off',
     },
   },
-];
+]

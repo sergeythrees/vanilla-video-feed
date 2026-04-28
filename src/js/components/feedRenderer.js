@@ -5,7 +5,7 @@
  * @returns {HTMLElement}
  */
 function buildFeedItem(videoData, index, total) {
-  const wrapper = document.createElement('div');
+  const wrapper = document.createElement('div')
   wrapper.innerHTML = `
     <section class="feed-item" data-index="${index}">
       <video class="feed-video" src="${videoData.src}" muted loop playsinline
@@ -28,8 +28,8 @@ function buildFeedItem(videoData, index, total) {
         </div>
       </div>
     </section>
-  `;
-  return wrapper.firstElementChild;
+  `
+  return wrapper.firstElementChild
 }
 
 /**
@@ -37,10 +37,10 @@ function buildFeedItem(videoData, index, total) {
  * @param {Array<{ src: string, title: string, author: string, poster?: string }>} list
  */
 export function renderFeed(feedEl, list) {
-  const fragment = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment()
   for (let i = 0; i < list.length; i += 1) {
-    fragment.append(buildFeedItem(list[i], i, list.length));
+    fragment.append(buildFeedItem(list[i], i, list.length))
   }
-  feedEl.innerHTML = '';
-  feedEl.append(fragment);
+  feedEl.innerHTML = ''
+  feedEl.append(fragment)
 }

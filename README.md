@@ -55,10 +55,10 @@ server.mjs                  ← API (GET /api/videos) + static file server + vid
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm start` | Run the server |
-| `npm run check` | Lint JS + check formatting + lint CSS |
+| Command           | Description                           |
+| ----------------- | ------------------------------------- |
+| `npm start`       | Run the server                        |
+| `npm run check`   | Lint JS + check formatting + lint CSS |
 | `npm run fix-all` | Auto-fix all lint & formatting issues |
 
 ## Features
