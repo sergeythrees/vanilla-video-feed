@@ -18,6 +18,9 @@ package-lock.json
 .DS_Store
 Thumbs.db
 
+# Secrets
+credentials.json
+
 # Build / generated outputs
 *.network-request
 *.network-response
