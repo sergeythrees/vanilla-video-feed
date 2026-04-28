@@ -2,25 +2,25 @@ import {
   getControlViews,
   getPreloadMode,
   getProgressPercent,
-} from '../ui/playerUI.js';
+} from '../ui/playerUI.js'
 
 /**
  * Attempts playback while swallowing autoplay-policy rejections.
  */
 function safePlay(videoEl) {
-  const maybePromise = videoEl.play();
+  const maybePromise = videoEl.play()
   if (maybePromise && typeof maybePromise.catch === 'function') {
-    maybePromise.catch(() => {});
+    maybePromise.catch(() => {})
   }
 }
 
 function updateProgress(videoEl, progressEl) {
-  const value = getProgressPercent(videoEl.currentTime, videoEl.duration);
-  progressEl.style.width = `${Math.max(0, Math.min(100, value))}%`;
+  const value = getProgressPercent(videoEl.currentTime, videoEl.duration)
+  progressEl.style.width = `${Math.max(0, Math.min(100, value))}%`
 }
 
 function preloadForDistance(videoEl, distance) {
-  videoEl.preload = getPreloadMode(distance);
+  videoEl.preload = getPreloadMode(distance)
 }
 
 export class VideoPlayer {
@@ -29,99 +29,99 @@ export class VideoPlayer {
    */
   constructor(itemEl) {
     /** @type {HTMLElement} */
-    this._itemEl = itemEl;
+    this._itemEl = itemEl
     /** @type {HTMLVideoElement} */
-    this._videoEl = itemEl.querySelector('.feed-video');
+    this._videoEl = itemEl.querySelector('.feed-video')
     /** @type {HTMLElement} */
-    this._loadingEl = itemEl.querySelector('.video-loading');
+    this._loadingEl = itemEl.querySelector('.video-loading')
     /** @type {HTMLElement} */
-    this._playBtn = itemEl.querySelector('.js-play-toggle');
+    this._playBtn = itemEl.querySelector('.js-play-toggle')
     /** @type {HTMLElement} */
-    this._muteBtn = itemEl.querySelector('.js-mute-toggle');
+    this._muteBtn = itemEl.querySelector('.js-mute-toggle')
     /** @type {HTMLElement} */
-    this._progressEl = itemEl.querySelector('.js-progress');
+    this._progressEl = itemEl.querySelector('.js-progress')
 
-    this._setupListeners();
-    this._syncButtons();
+    this._setupListeners()
+    this._syncButtons()
   }
 
   _togglePlay() {
     if (this._videoEl.paused) {
-      safePlay(this._videoEl);
+      safePlay(this._videoEl)
     } else {
-      this._videoEl.pause();
+      this._videoEl.pause()
     }
-    this._syncButtons();
+    this._syncButtons()
   }
 
   _hideLoading() {
-    this._loadingEl.classList.add('hidden');
+    this._loadingEl.classList.add('hidden')
   }
 
   _showError() {
-    this._loadingEl.classList.add('hidden');
-    const errorEl = document.createElement('div');
-    errorEl.className = 'video-error';
-    errorEl.textContent = 'Unable to load this video.';
-    this._itemEl.append(errorEl);
+    this._loadingEl.classList.add('hidden')
+    const errorEl = document.createElement('div')
+    errorEl.className = 'video-error'
+    errorEl.textContent = 'Unable to load this video.'
+    this._itemEl.append(errorEl)
   }
 
   _syncButtons() {
-    const { play, mute } = getControlViews(this._videoEl);
-    this._playBtn.textContent = play.icon;
-    this._playBtn.setAttribute('aria-label', play.ariaLabel);
-    this._muteBtn.textContent = mute.icon;
-    this._muteBtn.setAttribute('aria-label', mute.ariaLabel);
+    const { play, mute } = getControlViews(this._videoEl)
+    this._playBtn.textContent = play.icon
+    this._playBtn.setAttribute('aria-label', play.ariaLabel)
+    this._muteBtn.textContent = mute.icon
+    this._muteBtn.setAttribute('aria-label', mute.ariaLabel)
   }
 
   _setupListeners() {
     this._videoEl.addEventListener('loadeddata', () => this._hideLoading(), {
       once: true,
-    });
-    this._videoEl.addEventListener('error', () => this._showError());
+    })
+    this._videoEl.addEventListener('error', () => this._showError())
     this._videoEl.addEventListener('timeupdate', () =>
       updateProgress(this._videoEl, this._progressEl),
-    );
+    )
 
     this._playBtn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      this._togglePlay();
-    });
+      event.stopPropagation()
+      this._togglePlay()
+    })
 
     this._muteBtn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      this._videoEl.muted = !this._videoEl.muted;
-      this._syncButtons();
-    });
+      event.stopPropagation()
+      this._videoEl.muted = !this._videoEl.muted
+      this._syncButtons()
+    })
 
-    this._itemEl.addEventListener('click', () => this._togglePlay());
+    this._itemEl.addEventListener('click', () => this._togglePlay())
   }
 
   play() {
-    safePlay(this._videoEl);
-    this._syncButtons();
+    safePlay(this._videoEl)
+    this._syncButtons()
   }
 
   pause() {
-    this._videoEl.pause();
-    this._syncButtons();
+    this._videoEl.pause()
+    this._syncButtons()
   }
 
   /**
    * @param {number} distance - distance from the active feed item
    */
   setDistance(distance) {
-    preloadForDistance(this._videoEl, distance);
+    preloadForDistance(this._videoEl, distance)
   }
 
   resetProgress() {
-    this._progressEl.style.width = '0';
+    this._progressEl.style.width = '0'
   }
 
   /**
    * @returns {boolean} whether the video element is currently paused
    */
   isPaused() {
-    return this._videoEl.paused;
+    return this._videoEl.paused
   }
 }

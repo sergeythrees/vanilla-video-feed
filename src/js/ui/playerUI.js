@@ -5,10 +5,10 @@
  */
 export function getProgressPercent(currentTime, duration) {
   if (!duration || Number.isNaN(duration)) {
-    return 0;
+    return 0
   }
-  const value = (currentTime / duration) * 100;
-  return Math.max(0, Math.min(100, value));
+  const value = (currentTime / duration) * 100
+  return Math.max(0, Math.min(100, value))
 }
 
 /**
@@ -17,12 +17,12 @@ export function getProgressPercent(currentTime, duration) {
  */
 export function getPreloadMode(distance) {
   if (distance === 0) {
-    return 'auto';
+    return 'auto'
   }
   if (distance === 1) {
-    return 'metadata';
+    return 'metadata'
   }
-  return 'none';
+  return 'none'
 }
 
 /**
@@ -37,5 +37,5 @@ export function getControlViews(videoEl) {
     mute: videoEl.muted
       ? { icon: '🔇', ariaLabel: 'Unmute video' }
       : { icon: '🔊', ariaLabel: 'Mute video' },
-  };
+  }
 }
